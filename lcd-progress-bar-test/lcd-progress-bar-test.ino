@@ -66,25 +66,25 @@ byte p5[8] = {
   0x1F,
   0x1F};
 
-float targetTime = 30.0; // in seconds
+float targetTime = 5.0; // in seconds
 float startTime; // in milliseconds
 
 LiquidCrystal_I2C	lcd(0x27,2,1,0,4,5,6,7); // 0x27 is the I2C bus address for an unmodified module
 
 void setup()   {
-  Serial.begin(9600);
   pinMode(12,OUTPUT);
   digitalWrite(12,HIGH);
   lcd.setBacklightPin(3,POSITIVE);
   lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
   
+  lcd.begin(16, 2); // for the new LiquidCrystal library, it's crucial that
+                    // this 'begin' comes before createChar's
   lcd.createChar(0, p1);
   lcd.createChar(1, p2);
   lcd.createChar(2, p3);
   lcd.createChar(3, p4);
   lcd.createChar(4, p5);
   
-  lcd.begin(16, 2);
   lcd.clear();
   startTime = millis();
 }
@@ -100,9 +100,15 @@ void loop()
   percent = (millis() - startTime)/(1000*targetTime)*100.0;
 
   lcd.print("startin up...");
-  Serial.println(int(targetTime - (millis()-startTime)/1000));
-  lcd.print(int(targetTime - (millis()-startTime)/1000));
-  lcd.print("s");
+  if (int(targetTime - (millis()-startTime)/1000) > 9) {
+    lcd.print(int(targetTime - (millis()-startTime)/1000));
+    lcd.print("s");
+  }
+  else {
+    lcd.print(" ");
+    lcd.print(int(targetTime - (millis()-startTime)/1000));
+    lcd.print("s");
+  }
   
   lcd.setCursor(0,1);
 
@@ -112,7 +118,7 @@ void loop()
 
   if (a>=1) {
 
-    for (int i=1;i<=a;i++) {
+    for (int i=1;i<a;i++) {
 
       lcd.write(byte(4));
 
@@ -162,5 +168,12 @@ void loop()
   }
   else{
     lcd.print("you have arrived");
+    lcd.setCursor(0, 1);
+    for (int i=1;i<=16;i++) {
+
+      lcd.write(byte(4));
+
+      b=i;
+    }
   }
 }
