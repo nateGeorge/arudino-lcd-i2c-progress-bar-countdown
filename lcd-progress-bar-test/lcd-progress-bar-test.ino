@@ -76,7 +76,7 @@ void setup()   {
   digitalWrite(12,HIGH);
   lcd.setBacklightPin(3,POSITIVE);
   lcd.setBacklight(HIGH); // NOTE: You can turn the backlight off by setting it to LOW instead of HIGH
-  
+                          // although I haven't found it to work
   lcd.begin(16, 2); // for the new LiquidCrystal library, it's crucial that
                     // this 'begin' comes before createChar's
   lcd.createChar(0, p1);
